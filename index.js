@@ -63,3 +63,5 @@ let usernames = users.map(
 );
 
 console.log(usernames);
+
+console.log(name);
