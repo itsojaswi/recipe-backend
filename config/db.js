@@ -21,5 +21,4 @@ const connectDB = async () => {
     }
 };
 
-// ! Prettier not working
 module.exports = connectDB;
