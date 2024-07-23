@@ -23,7 +23,7 @@ app.use(express.json({ extended: false }))
 
 app.get('/', (req, res) => res.send('API Running'))
 app.use('/api/recipe', recipeRoutes)
-app.use('/api/user', userRoutes)
+app.use('/api', userRoutes)
 
 const PORT = process.env.PORT || 4000
 
