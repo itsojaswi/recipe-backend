@@ -111,6 +111,7 @@ const updateRecipe = async (req, res) => {
     res.status(400).json({ error: error.message })
   }
 }
+
 // Delete a recipe by ID
 const deleteRecipe = async (req, res) => {
   const { id } = req.params // Destructure id from req.params
