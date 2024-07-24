@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 // Define the schema for a favorite recipe
-const favoriteRecipeSchema = new mongoose.Schema(
+const favoriteRecipe = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -18,4 +18,4 @@ const favoriteRecipeSchema = new mongoose.Schema(
 )
 
 // Create the FavoriteRecipe model
-module.exports = mongoose.model('FavoriteRecipe', favoriteRecipeSchema)
+module.exports = mongoose.model('FavoriteRecipe', favoriteRecipe)
