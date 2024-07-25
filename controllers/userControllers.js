@@ -15,7 +15,7 @@ const loginUser = async (req, res) => {
     // create a token
     const token = createToken(user._id)
 
-    res.status(200).json({ email, token })
+    res.status(200).json({ email, token, role: user.role })
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
@@ -23,23 +23,28 @@ const loginUser = async (req, res) => {
 
 // signup user
 const signupUser = async (req, res) => {
-  const { username, email, password } = req.body
+  const { username, email, password, role } = req.body
 
   try {
-    const user = await User.signup(username, email, password)
+    const user = await User.signup(username, email, password, role)
 
     // create a token
     const token = createToken(user._id)
 
-    res.status(200).json({ email, token })
+    res.status(200).json({ email, token, role: user.role })
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
 }
 
-// Get all users
+// Get all users (only accessible by admin)
 const getAllUsers = async (req, res) => {
   try {
+    const adminUser = await User.findById(req.user._id) 
+    if (!adminUser.isAuthorized('admin')) {
+      return res.status(403).json({ message: 'Not authorized' })
+    }
+
     const users = await User.find()
     res.json(users)
   } catch (error) {
@@ -47,12 +52,17 @@ const getAllUsers = async (req, res) => {
   }
 }
 
-// get a user
+// get a user (only accessible by admin)
 const getUser = async (req, res) => {
   try {
+    const adminUser = await User.findById(req.user._id) 
+    if (!adminUser.isAuthorized('admin')) {
+      return res.status(403).json({ message: 'Not authorized' })
+    }
+
     const user = await User.findById(req.params.id)
     if (!user) {
-      return res.status(404).json({ message: 'user' })
+      return res.status(404).json({ message: 'User not found' })
     }
     res.json(user)
   } catch (error) {
@@ -60,8 +70,13 @@ const getUser = async (req, res) => {
   }
 }
 
-// delete user
+// delete user (only accessible by admin)
 const deleteUser = async (req, res) => {
+  const adminUser = await User.findById(req.user._id)
+  if (!adminUser.isAuthorized('admin')) {
+    return res.status(403).json({ message: 'Not authorized' })
+  }
+
   const userId = req.params.id
 
   try {
@@ -70,7 +85,7 @@ const deleteUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
-    res.status(200).json({ message: 'user deleted' })
+    res.status(200).json({ message: 'User deleted' })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
