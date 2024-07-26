@@ -2,6 +2,7 @@ const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 
 const createToken = _id => {
+  console.log(_id)
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: '3d' })
 }
 
@@ -37,11 +38,15 @@ const signupUser = async (req, res) => {
   }
 }
 
-// Get all users (only accessible by admin)
 const getAllUsers = async (req, res) => {
+  console.log(req.body)
   try {
-    const adminUser = await User.findById(req.user._id) 
-    if (!adminUser.isAuthorized('admin')) {
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ message: 'Unauthorized' })
+    }
+
+    const adminUser = await User.findById(req.user._id)
+    if (!adminUser || !adminUser.isAuthorized('admin')) {
       return res.status(403).json({ message: 'Not authorized' })
     }
 
@@ -55,12 +60,13 @@ const getAllUsers = async (req, res) => {
 // get a user (only accessible by admin)
 const getUser = async (req, res) => {
   try {
-    const adminUser = await User.findById(req.user._id) 
+    const adminUser = await User.findById(req.user._id)
     if (!adminUser.isAuthorized('admin')) {
       return res.status(403).json({ message: 'Not authorized' })
     }
 
     const user = await User.findById(req.params.id)
+    console.log(user)
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }

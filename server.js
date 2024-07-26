@@ -5,6 +5,7 @@ require('dotenv').config()
 const userRoutes = require('./routes/userRoutes')
 const recipeRoutes = require('./routes/recipeRoutes')
 const favoriteRoutes = require('./routes/favoriteRoutes')
+const mealRoutes = require('./routes/mealPlannerRoutes')
 // ? creating instace for express application
 const app = express()
 
@@ -21,6 +22,7 @@ app.get('/', (req, res) => res.send('API Running'))
 app.use('/api/recipe', recipeRoutes)
 app.use('/api', userRoutes)
 app.use('/api/favorite', favoriteRoutes)
+app.use('/api/meal', mealRoutes)
 
 const PORT = process.env.PORT || 4000
 
