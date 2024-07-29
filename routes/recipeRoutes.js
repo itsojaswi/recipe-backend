@@ -10,13 +10,15 @@ const {
 } = require('../controllers/recipeController')
 const authMiddleware = require('../middleware/auth')
 
+router.use(authMiddleware)
+
 // add to recipe
 router.post('/', authMiddleware, createRecipe)
 
-// get all recipes 
+// get all recipes
 router.get('/', getAllRecipes)
 
-// get one recipe 
+// get one recipe
 router.get('/:id', getRecipe)
 
 // update the existing recipe

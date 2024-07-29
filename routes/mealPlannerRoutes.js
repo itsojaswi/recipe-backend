@@ -7,13 +7,15 @@ const {
 } = require('../controllers/mealPlannerController')
 const authMiddleware = require('../middleware/auth')
 
+router.use(authMiddleware)
+
 // post to favorite
-router.post('/', authMiddleware, addRecipeToMealPlanner)
+router.post('/', addRecipeToMealPlanner)
 
 // get from favorite
-router.get('/', authMiddleware, getUserMealPlanner)
+router.get('/', getUserMealPlanner)
 
 // delete from favorite
-router.delete('/:id', authMiddleware, removeRecipeFromMealPlanner)
+router.delete('/:id', removeRecipeFromMealPlanner)
 
 module.exports = router

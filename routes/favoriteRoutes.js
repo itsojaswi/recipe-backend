@@ -7,13 +7,15 @@ const {
 } = require('../controllers/favoriteControllers')
 const authMiddleware = require('../middleware/auth')
 
+router.use(authMiddleware)
+
 // post to favorite
-router.post('/', authMiddleware, addToFavorites)
+router.post('/', addToFavorites)
 
 // get from favorite
-router.get('/', authMiddleware, getUserFavorites)
+router.get('/', getUserFavorites)
 
 // delete from favorite
-router.delete('/:id', authMiddleware, removeFromFavorites)
+router.delete('/:id', removeFromFavorites)
 
 module.exports = router
