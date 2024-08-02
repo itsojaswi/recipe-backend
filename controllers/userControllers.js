@@ -1,19 +1,18 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 
+// Function to create a JWT token
 const createToken = (_id) => {
   console.log(_id);
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
 };
 
-// login user
+// Controller function to handle user login
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const user = await User.login(email, password);
-
-    // create a token
     const token = createToken(user._id);
 
     res.status(200).json({ email, token, role: user.role });
@@ -22,14 +21,12 @@ const loginUser = async (req, res) => {
   }
 };
 
-// signup user
+// Controller function to handle user signup
 const signupUser = async (req, res) => {
   const { username, email, password, role } = req.body;
 
   try {
     const user = await User.signup(username, email, password, role);
-
-    // create a token
     const token = createToken(user._id);
 
     res.status(200).json({ email, token, role: user.role });
@@ -38,7 +35,7 @@ const signupUser = async (req, res) => {
   }
 };
 
-// get all users (only accessible by admin)
+// Controller function to get all users
 const getAllUsers = async (req, res) => {
   console.log(req.body);
   try {
@@ -58,7 +55,7 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-// get a user (only accessible by admin)
+// Controller function to get a specific user
 const getUser = async (req, res) => {
   try {
     const adminUser = await User.findById(req.user._id);
@@ -77,7 +74,7 @@ const getUser = async (req, res) => {
   }
 };
 
-// delete user (only accessible by admin)
+// Controller function to delete a user
 const deleteUser = async (req, res) => {
   const adminUser = await User.findById(req.user._id);
   if (!adminUser.isAuthorized("admin")) {

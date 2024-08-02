@@ -114,10 +114,9 @@ const updateRecipe = async (req, res) => {
 
 // Delete a recipe by ID
 const deleteRecipe = async (req, res) => {
-  const { id } = req.params; // Destructure id from req.params
+  const { id } = req.params;
 
   try {
-    // Optional: Check if the user is authorized to delete this recipe
     const recipe = await Recipe.findById(id);
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
@@ -129,9 +128,8 @@ const deleteRecipe = async (req, res) => {
         .json({ message: "Unauthorized to delete this recipe" });
     }
 
-    // Use findByIdAndDelete to remove the recipe
     await Recipe.findByIdAndDelete(id);
-    res.status(204).json({ message: "Recipe deleted" }); // Return 204 No Content
+    res.status(204).json({ message: "Recipe deleted" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
