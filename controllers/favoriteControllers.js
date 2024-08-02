@@ -22,7 +22,7 @@ const addToFavorites = async (req, res) => {
     }
 
     // Create a new favorite recipe entry
-    const newFavorite = new FavoriteRecipe({ userId, recipeId });
+    const newFavorite = new FavoriteRecipe(userId, recipeId);
     await newFavorite.save();
 
     // Respond with the created favorite recipe

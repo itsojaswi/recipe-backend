@@ -42,7 +42,7 @@ const signupUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
   console.log(req.body);
   try {
-    if (!req.user || !req.user._id) {
+    if (!req.user?.id) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 

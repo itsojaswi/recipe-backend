@@ -4,7 +4,7 @@ const User = require("../models/userModel"); // Adjust the path as necessary
 const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  if (!authHeader?.startsWith("Bearer ")) {
     return res
       .status(401)
       .json({ message: "Authentication token is required" });
