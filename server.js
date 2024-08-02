@@ -1,32 +1,34 @@
-const express = require('express')
-const connectDB = require('./config/db')
-const cors = require('cors')
-require('dotenv').config()
-const userRoutes = require('./routes/userRoutes')
-const recipeRoutes = require('./routes/recipeRoutes')
-const favoriteRoutes = require('./routes/favoriteRoutes')
-const mealRoutes = require('./routes/mealPlannerRoutes')
+const express = require("express");
+const connectDB = require("./config/db");
+const cors = require("cors");
+require("dotenv").config();
+const userRoutes = require("./routes/userRoutes");
+const recipeRoutes = require("./routes/recipeRoutes");
+const favoriteRoutes = require("./routes/favoriteRoutes");
+const mealRoutes = require("./routes/mealPlannerRoutes");
+const path = require("path");
 // ? creating instace for express application
-const app = express()
+const app = express();
 
 // Connect Database
-connectDB()
+connectDB();
 
 // Use CORS middleware
-app.use(cors())
+app.use(cors());
 
 // Init Middleware
-app.use(express.json({ extended: false }))
+app.use(express.json({ extended: false }));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Define Routes
-app.get('/', (req, res) => res.send('API Running'))
-app.use('/api/recipe', recipeRoutes)
-app.use('/api', userRoutes)
-app.use('/api/favorite', favoriteRoutes)
-app.use('/api/meal', mealRoutes)
+app.get("/", (req, res) => res.send("API Running"));
+app.use("/api/recipe", recipeRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/favorite", favoriteRoutes);
+app.use("/api/meal", mealRoutes);
 
 // Define port
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 4000;
 
 // listen to port
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

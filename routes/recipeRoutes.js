@@ -1,33 +1,33 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 const {
   createRecipe,
   getAllRecipes,
   getRecipe,
   updateRecipe,
   deleteRecipe,
-  addReview
-} = require('../controllers/recipeController')
-const authMiddleware = require('../middleware/auth')
+  addReview,
+} = require("../controllers/recipeController");
+const authMiddleware = require("../middleware/auth");
 
-router.use(authMiddleware)
+router.use(authMiddleware);
 
 // add to recipe
-router.post('/', authMiddleware, createRecipe)
+router.post("/", authMiddleware, createRecipe);
 
 // get all recipes
-router.get('/', getAllRecipes)
+router.get("/", getAllRecipes);
 
 // get one recipe
-router.get('/:id', getRecipe)
+router.get("/:id", getRecipe);
 
 // update the existing recipe
-router.patch('/:id', authMiddleware, updateRecipe)
+router.patch("/:id", authMiddleware, updateRecipe);
 
 // delete from existing recipe
-router.delete('/:id', authMiddleware, deleteRecipe)
+router.delete("/:id", authMiddleware, deleteRecipe);
 
 // add review to a recipe
-router.post('/:recipeId/reviews', authMiddleware, addReview)
+router.post("/:recipeId/reviews", authMiddleware, addReview);
 
-module.exports = router
+module.exports = router;
