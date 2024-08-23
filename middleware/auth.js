@@ -15,6 +15,8 @@ const authMiddleware = async (req, res, next) => {
   // Extract the token from the authorization header
   const token = authHeader.split(" ")[1];
 
+  console.log(authHeader);
+
   try {
     // Verify the token using the secret key
     const decoded = jwt.verify(token, process.env.SECRET);
@@ -31,6 +33,7 @@ const authMiddleware = async (req, res, next) => {
     // Call the next middleware or route handler
     next();
   } catch (error) {
+    console.error("Error verifying token:", error);
     // If token is invalid, return 401 Unauthorized
     res.status(401).json({ message: "Invalid token" });
   }
