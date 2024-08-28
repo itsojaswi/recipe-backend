@@ -11,15 +11,15 @@ const reviewSchema = new mongoose.Schema(
     rating: {
       type: Number,
       required: true,
-      min: 1, // Minimum rating allowed is 1
-      max: 5, // Maximum rating allowed is 5
+      min: 1,
+      max: 5,
     },
     comment: {
       type: String,
       required: true,
     },
   },
-  { timestamps: true } // Adds createdAt and updatedAt timestamps to the document
+  { timestamps: true }
 );
 
 module.exports = reviewSchema;

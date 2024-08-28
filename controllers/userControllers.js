@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 
 // Function to create a JWT token
 const createToken = (_id) => {
-  console.log(_id);
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
 };
 
@@ -15,7 +14,9 @@ const loginUser = async (req, res) => {
     const user = await User.login(email, password);
     const token = createToken(user._id);
 
-    res.status(200).json({ email, token, role: user.role });
+    res
+      .status(200)
+      .json({ email, username: user.username, token, role: user.role });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -37,7 +38,6 @@ const signupUser = async (req, res) => {
 
 // Controller function to get all users
 const getAllUsers = async (req, res) => {
-  console.log(req.body);
   try {
     if (!req.user?.id) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -64,7 +64,6 @@ const getUser = async (req, res) => {
     }
 
     const user = await User.findById(req.params.id);
-    console.log(user);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

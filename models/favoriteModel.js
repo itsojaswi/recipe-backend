@@ -14,9 +14,7 @@ const favoriteRecipe = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true } // Enable timestamps for createdAt and updatedAt fields
+  { timestamps: true }
 );
 
-module.exports = mongoose.model("FavoriteRecipe", favoriteRecipe); // Export the model
-
-// End of file
+module.exports = mongoose.model("FavoriteRecipe", favoriteRecipe);

@@ -10,8 +10,6 @@ const {
 } = require("../controllers/recipeController");
 const authMiddleware = require("../middleware/auth");
 
-router.use(authMiddleware);
-
 // add to recipe
 router.post("/", authMiddleware, createRecipe);
 

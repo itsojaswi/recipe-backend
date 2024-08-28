@@ -43,7 +43,6 @@ const createRecipe = async (req, res) => {
       instructions,
       prepTime,
       cookTime,
-      servings,
       tags,
       image,
     } = req.body;
@@ -53,7 +52,6 @@ const createRecipe = async (req, res) => {
       instructions,
       prepTime,
       cookTime,
-      servings,
       createdBy: req.user.id,
       tags,
       image,

@@ -1,45 +1,30 @@
-const FavoriteRecipe = require("../models/favrioteModels");
+const FavoriteRecipe = require("../models/favoriteModel");
 
-// Function to add a recipe to favorites
-const addToFavorites = async (req, res) => {
+// Function to toggle a recipe in favorites
+const toggleFavorite = async (req, res) => {
   try {
     const { recipeId } = req.body;
     const userId = req.user.id;
 
     if (!recipeId) {
-      return res.status(400).json({ message: "recipeId is required" });
+      return res.status(400).json({ message: "Recipe ID is required" });
     }
 
+    // Check if the recipe is already in the user's favorites
     const existingFavorite = await FavoriteRecipe.findOne({ userId, recipeId });
+
     if (existingFavorite) {
-      return res.status(400).json({ message: "Recipe already in favorites" });
+      await FavoriteRecipe.findByIdAndDelete(existingFavorite._id);
+      return res.status(200).json({ message: "Recipe removed from favorites" });
+    } else {
+      const newFavorite = new FavoriteRecipe({ userId, recipeId });
+      await newFavorite.save();
+      return res
+        .status(201)
+        .json({ message: "Recipe added to favorites", favorite: newFavorite });
     }
-
-    const newFavorite = new FavoriteRecipe(userId, recipeId);
-    await newFavorite.save();
-
-    res.status(201).json(newFavorite);
   } catch (error) {
-    console.error("Error adding to favorites:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
-
-// Function to remove a recipe from favorites
-const removeFromFavorites = async (req, res) => {
-  try {
-    console.log(req.params);
-    const { favoriteId } = req.params;
-
-    const favorite = await FavoriteRecipe.findOneAndDelete(favoriteId);
-
-    if (!favorite) {
-      return res.status(404).json({ message: "Recipe not found in favorites" });
-    }
-
-    res.status(200).json({ message: "Recipe removed from favorites" });
-  } catch (error) {
-    console.error("Error removing from favorites:", error);
+    console.error("Error toggling favorite:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -48,11 +33,6 @@ const removeFromFavorites = async (req, res) => {
 const getUserFavorites = async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log(userId);
-
-    if (!userId) {
-      return res.status(400).json({ message: "User ID is required" });
-    }
 
     const favorites = await FavoriteRecipe.find({ userId }).populate(
       "recipeId"
@@ -69,8 +49,34 @@ const getUserFavorites = async (req, res) => {
   }
 };
 
+// Function to check if a recipe is in user's favorites
+const checkFavorites = async (req, res) => {
+  try {
+    const { recipeId } = req.params;
+    const userId = req.user.id;
+
+    if (!recipeId) {
+      return res.status(400).json({ message: "Recipe ID is required" });
+    }
+
+    // Check if the recipe is in the user's favorites
+    const favorite = await FavoriteRecipe.findOne({
+      userId,
+      recipeId,
+    });
+
+    if (favorite) {
+      return res.status(200).json({ isFavorite: true });
+    } else {
+      return res.status(200).json({ isFavorite: false });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
-  addToFavorites,
-  removeFromFavorites,
+  toggleFavorite,
   getUserFavorites,
+  checkFavorites,
 };
