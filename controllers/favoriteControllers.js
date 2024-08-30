@@ -29,14 +29,18 @@ const toggleFavorite = async (req, res) => {
   }
 };
 
-// Function to get user's favorite recipes
 const getUserFavorites = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const favorites = await FavoriteRecipe.find({ userId }).populate(
-      "recipeId"
-    );
+    const favorites = await FavoriteRecipe.find({ userId }).populate({
+      path: "recipeId",
+      populate: {
+        path: "createdBy",
+        model: "User",
+        select: "name email username",
+      },
+    });
 
     if (favorites.length === 0) {
       return res.status(404).json({ message: "No favorite recipes found" });

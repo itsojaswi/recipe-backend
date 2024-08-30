@@ -66,7 +66,7 @@ const createRecipe = async (req, res) => {
 // Get all recipes
 const getAllRecipes = async (req, res) => {
   try {
-    const recipes = await Recipe.find();
+    const recipes = await Recipe.find().populate("createdBy");
     res.json(recipes);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -76,13 +76,22 @@ const getAllRecipes = async (req, res) => {
 // Get a single recipe by ID
 const getRecipe = async (req, res) => {
   try {
-    const recipe = await Recipe.findById(req.params.id);
+    const recipe = await Recipe.findById(req.params.id).populate("createdBy");
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
     res.json(recipe);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+const getRecipeWithAuthor = async (recipeId) => {
+  try {
+    const recipe = await Recipe.findById(recipeId).populate("createdBy");
+    return recipe;
+  } catch (error) {
+    console.error("Error fetching recipe:", error);
   }
 };
 
@@ -133,6 +142,28 @@ const deleteRecipe = async (req, res) => {
   }
 };
 
+const getRecipesByUserId = async (req, res) => {
+  const userId = req.user._id;
+
+  console.log("Authenticated userId:", userId);
+
+  try {
+    const recipes = await Recipe.find({ createdBy: userId }).populate(
+      "createdBy"
+    );
+
+    if (!recipes.length) {
+      return res
+        .status(404)
+        .json({ message: "No recipes found for this user" });
+    }
+
+    res.json(recipes);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // export modules
 module.exports = {
   addReview,
@@ -141,4 +172,6 @@ module.exports = {
   getAllRecipes,
   updateRecipe,
   deleteRecipe,
+  getRecipeWithAuthor,
+  getRecipesByUserId,
 };

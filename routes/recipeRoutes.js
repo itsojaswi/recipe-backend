@@ -7,6 +7,7 @@ const {
   updateRecipe,
   deleteRecipe,
   addReview,
+  getRecipesByUserId,
 } = require("../controllers/recipeController");
 const authMiddleware = require("../middleware/auth");
 
@@ -16,6 +17,7 @@ router.post("/", authMiddleware, createRecipe);
 // get all recipes
 router.get("/", getAllRecipes);
 
+router.get("/me", authMiddleware, getRecipesByUserId);
 // get one recipe
 router.get("/:id", getRecipe);
 
@@ -27,5 +29,7 @@ router.delete("/:id", authMiddleware, deleteRecipe);
 
 // add review to a recipe
 router.post("/:recipeId/reviews", authMiddleware, addReview);
+
+// get all recipes created by a specific user
 
 module.exports = router;
