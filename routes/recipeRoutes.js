@@ -17,7 +17,9 @@ router.post("/", authMiddleware, createRecipe);
 // get all recipes
 router.get("/", getAllRecipes);
 
+// get all recipes created by the authenticated user
 router.get("/me", authMiddleware, getRecipesByUserId);
+
 // get one recipe
 router.get("/:id", getRecipe);
 

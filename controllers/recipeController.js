@@ -5,7 +5,7 @@ const { body, validationResult } = require("express-validator");
 
 // add review to the recipe
 const addReview = async (req, res) => {
-  const { rating, comment } = req.body;
+  const { rating, reviews } = req.body;
   const { recipeId } = req.params;
 
   try {
@@ -17,7 +17,7 @@ const addReview = async (req, res) => {
     const review = {
       user: req.user.id,
       rating,
-      comment,
+      reviews,
     };
 
     recipe.reviews.push(review);
@@ -31,6 +31,10 @@ const addReview = async (req, res) => {
 
 // create a recipe
 const createRecipe = async (req, res) => {
+  if (!req.user || !req.user.id) {
+    return res.status(401).json({ message: "User is not authenticated" });
+  }
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -39,6 +43,7 @@ const createRecipe = async (req, res) => {
   try {
     const {
       title,
+      description,
       ingredients,
       instructions,
       prepTime,
@@ -46,8 +51,16 @@ const createRecipe = async (req, res) => {
       tags,
       image,
     } = req.body;
+    if (!title || !ingredients || !instructions) {
+      return res
+        .status(400)
+        .json({ message: "Title, ingredients, and instructions are required" });
+    }
+
+    // Create new recipe
     const recipe = new Recipe({
       title,
+      description,
       ingredients,
       instructions,
       prepTime,
@@ -56,10 +69,15 @@ const createRecipe = async (req, res) => {
       tags,
       image,
     });
+
+    // Save recipe to the database
     await recipe.save();
-    res.status(201).json(recipe);
+
+    // Respond with the created recipe
+    res.status(200).json(recipe);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Error creating recipe:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

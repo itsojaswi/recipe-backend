@@ -29,9 +29,7 @@ const pet = {
   },
 };
 
-console.log(
-  `My name is ${pet.name}, I am ${pet.age} years old and I like to ${pet.likes.indoor} inside and ${pet.likes.outdoor} outside.`
-);
+`My name is ${pet.name}, I am ${pet.age} years old and I like to ${pet.likes.indoor} inside and ${pet.likes.outdoor} outside.`;
 
 const {
   name,

@@ -19,6 +19,10 @@ USER node
 # Expose the port your application will run on
 EXPOSE 4000
 
+# healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+  CMD curl -f http://localhost:4000/ || exit 1
+
 # Start the application
 CMD ["npm", "start"]
 

@@ -15,7 +15,7 @@ const authMiddleware = async (req, res, next) => {
   // Extract the token from the authorization header
   const token = authHeader.split(" ")[1];
 
-  console.log(authHeader);
+  // console.log(authHeader);
 
   try {
     // Verify the token using the secret key
@@ -23,7 +23,7 @@ const authMiddleware = async (req, res, next) => {
 
     // Find the user based on the decoded user ID and exclude the password field
     req.user = await User.findById(decoded._id).select("-password");
-    console.log(req.user);
+    // console.log(req.user);
 
     // If user is not found, return 401 Unauthorized
     if (!req.user) {
