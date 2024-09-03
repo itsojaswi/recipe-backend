@@ -1,7 +1,7 @@
 // models/Recipe.js
 const mongoose = require("mongoose");
 const reviewSchema = require("./reviewModel"); // Adjust the path as necessary
-const favoriteSchema = require("./favoriteModel"); // Adjust the path as necessary
+const FavoriteRecipe = require("./favoriteModel"); // Adjust the path as necessary
 
 // Recipe schema for MongoDB
 const recipeSchema = new mongoose.Schema(

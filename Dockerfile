@@ -26,8 +26,3 @@ HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
 # Start the application
 CMD ["npm", "start"]
 
-
-# TODO 
-#  1. make this a multistage docker build 
-#  2. make the image smaller by using a smaller base image
-#  3. add a healthcheck to the dockerfile
