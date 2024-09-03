@@ -5,7 +5,7 @@ const { body, validationResult } = require("express-validator");
 
 // add review to the recipe
 const addReview = async (req, res) => {
-  const { rating, reviews } = req.body;
+  const { rating, reviewText } = req.body; // Assuming `reviews` is actually `reviewText`
   const { recipeId } = req.params;
 
   try {
@@ -17,13 +17,20 @@ const addReview = async (req, res) => {
     const review = {
       user: req.user.id,
       rating,
-      reviews,
+      reviewText,
     };
 
     recipe.reviews.push(review);
     await recipe.save();
 
-    res.status(201).json(recipe);
+    const updatedRecipe = await Recipe.findById(recipeId)
+      .populate({
+        path: "reviews.user",
+        select: "username profile",
+      })
+      .exec();
+
+    res.status(201).json(updatedRecipe);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -94,7 +101,10 @@ const getAllRecipes = async (req, res) => {
 // Get a single recipe by ID
 const getRecipe = async (req, res) => {
   try {
-    const recipe = await Recipe.findById(req.params.id).populate("createdBy");
+    const recipe = await Recipe.findById(req.params.id).populate({
+      path: "createdBy",
+      select: "username profile",
+    });
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }

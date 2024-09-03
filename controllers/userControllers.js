@@ -39,15 +39,10 @@ const signupUser = async (req, res) => {
 // Controller function to get all users
 const getAllUsers = async (req, res) => {
   try {
-    if (!req.user?.id) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
     const adminUser = await User.findById(req.user._id);
-    if (!adminUser || !adminUser.isAuthorized("admin")) {
+    if (!adminUser.isAuthorized("admin")) {
       return res.status(403).json({ message: "Not authorized" });
     }
-
     const users = await User.find();
     res.json(users);
   } catch (error) {
@@ -58,12 +53,9 @@ const getAllUsers = async (req, res) => {
 // Controller function to get a specific user
 const getUser = async (req, res) => {
   try {
-    const adminUser = await User.findById(req.user._id);
-    if (!adminUser.isAuthorized("admin")) {
-      return res.status(403).json({ message: "Not authorized" });
-    }
+    const userId = req.user.id;
 
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
