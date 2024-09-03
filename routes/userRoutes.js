@@ -20,7 +20,7 @@ router.post("/signup", signupUser);
 router.get("/", authentication, getAllUsers);
 
 // get user
-router.get("/:id", authentication, getUser);
+router.get("/me", authentication, getUser);
 
 // delete user
 router.delete("/:id", authentication, deleteUser);
