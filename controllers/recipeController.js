@@ -1,11 +1,11 @@
 const Recipe = require("../models/recipeModel");
+const User = require("../models/userModel");
 
 // Create a new recipe
 const { body, validationResult } = require("express-validator");
 
-// add review to the recipe
 const addReview = async (req, res) => {
-  const { rating, reviewText } = req.body; // Assuming `reviews` is actually `reviewText`
+  const { rating, reviewText } = req.body; // Make sure this is correct
   const { recipeId } = req.params;
 
   try {
@@ -17,7 +17,7 @@ const addReview = async (req, res) => {
     const review = {
       user: req.user.id,
       rating,
-      reviewText,
+      reviewText, // This should correctly map to the field
     };
 
     recipe.reviews.push(review);
@@ -192,6 +192,37 @@ const getRecipesByUserId = async (req, res) => {
   }
 };
 
+const search = async (req, res) => {
+  const { query } = req.query;
+
+  try {
+    if (!query || typeof query !== "string") {
+      return res
+        .status(400)
+        .json({ message: "Query parameter is required and must be a string" });
+    }
+
+    const regex = new RegExp(query, "i");
+
+    // Search recipes based on the query
+    const recipes = await Recipe.find({
+      $or: [{ title: { $regex: regex } }],
+    });
+
+    // Search users based on the query
+    const users = await User.find({
+      $or: [{ username: { $regex: regex } }],
+    });
+
+    res.json({ recipes, users });
+  } catch (error) {
+    console.error("Error during search:", error); // Detailed error logging
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
 // export modules
 module.exports = {
   addReview,
@@ -202,4 +233,5 @@ module.exports = {
   deleteRecipe,
   getRecipeWithAuthor,
   getRecipesByUserId,
+  search,
 };

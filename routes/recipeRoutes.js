@@ -8,6 +8,7 @@ const {
   deleteRecipe,
   addReview,
   getRecipesByUserId,
+  search,
 } = require("../controllers/recipeController");
 const authMiddleware = require("../middleware/auth");
 
@@ -19,6 +20,9 @@ router.get("/", getAllRecipes);
 
 // get all recipes created by the authenticated user
 router.get("/me", authMiddleware, getRecipesByUserId);
+
+// search for recipes
+router.get("/search", authMiddleware, search);
 
 // get one recipe
 router.get("/:id", getRecipe);

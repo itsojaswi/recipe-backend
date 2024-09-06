@@ -14,9 +14,10 @@ const reviewSchema = new mongoose.Schema(
       min: 1,
       max: 5,
     },
-    reviews: {
+    reviewText: {
       type: String,
       required: true,
+      maxlength: 500,
     },
   },
   { timestamps: true }

@@ -29,8 +29,8 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please add a password"],
     },
     profile: {
-      bio: { type: String, maxLength: 50 },
-      avatar: { type: String },
+      bio: { type: String, default: "", maxLength: 50 },
+      avatar: { type: String, default: "" },
     },
 
     role: {
@@ -94,6 +94,20 @@ userSchema.statics.login = async function (email, password) {
     throw Error("Incorrect password");
   }
 
+  return user;
+};
+
+// Static method to update the user's bio and avatar
+userSchema.statics.updateBio = async function (userId, bio, avatar) {
+  const user = await this.findById(userId);
+  if (!user) {
+    throw Error("User not found");
+  }
+
+  if (bio) user.profile.bio = bio;
+  if (avatar) user.profile.avatar = avatar; // Ensure avatar is updated only if provided
+
+  await user.save();
   return user;
 };
 
