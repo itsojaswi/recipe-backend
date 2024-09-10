@@ -90,7 +90,7 @@ const deleteUser = async (req, res) => {
 
 // Update user profile
 const updateProfile = async (req, res) => {
-  const userId = req.params._id; // Obtained from auth middleware
+  const userId = req.params.id; // Obtained from auth middleware
 
   const { username, email, password, bio, avatar } = req.body;
 
@@ -154,8 +154,6 @@ const updateProfile = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-module.exports = { updateProfile };
 
 const getUserProfile = async (req, res) => {
   const userId = req.params.id; // Obtained from auth middleware

@@ -101,10 +101,15 @@ const getAllRecipes = async (req, res) => {
 // Get a single recipe by ID
 const getRecipe = async (req, res) => {
   try {
-    const recipe = await Recipe.findById(req.params.id).populate({
-      path: "createdBy",
-      select: "username profile",
-    });
+    const recipe = await Recipe.findById(req.params.id)
+      .populate({
+        path: "createdBy",
+        select: "username profile",
+      })
+      .populate({
+        path: "reviews.user",
+        select: "username profile",
+      });
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
@@ -138,7 +143,7 @@ const updateRecipe = async (req, res) => {
     if (recipe.createdBy.toString() !== req.user.id) {
       return res
         .status(403)
-        .json({ message: "Unauthorized to delete this recipe" });
+        .json({ message: "Unauthorized to update this recipe" });
     }
 
     res.status(200).json(recipe);
@@ -206,7 +211,11 @@ const search = async (req, res) => {
 
     // Search recipes based on the query
     const recipes = await Recipe.find({
-      $or: [{ title: { $regex: regex } }],
+      $or: [
+        {
+          title: { $regex: regex },
+        },
+      ],
     });
 
     // Search users based on the query

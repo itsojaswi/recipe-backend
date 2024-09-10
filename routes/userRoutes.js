@@ -21,8 +21,8 @@ router.post("/signup", signupUser);
 // get all users
 router.get("/", authentication, getAllUsers);
 
-// update user profile
-router.patch("/:id/profile", authentication, updateProfile);
+// update user profile (with user ID as a parameter)
+router.patch("/edit-profile/:id", authentication, updateProfile);
 
 // get user
 // router.get("/:id", authentication, getUser);

@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please add a password"],
     },
     profile: {
-      bio: { type: String, default: "", maxLength: 50 },
+      bio: { type: String, default: "", maxLength: 500 },
       avatar: { type: String, default: "" },
     },
 
